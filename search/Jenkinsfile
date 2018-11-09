@@ -1,0 +1,37 @@
+node {
+  checkout scm
+    def nodeHome = tool name: 'Default', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    env.PATH = "${nodeHome}/bin:${env.PATH}"
+		
+  stage('Package') {
+      sh 'npm install'
+      sh 'gulp default'
+  }
+
+  stage('Create Docker Image') {
+    docker.withRegistry('https://registry.gtm.team') {
+      app = docker.build("gtm/vacancydetail", "--no-cache .")
+    }
+  }
+
+  stage ('Run Docker Application') {
+    try {
+      sh "docker run -e DB_URI=$DB gtm/vacancydetail:${env.BUILD_NUMBER}"
+
+    } catch (error) {
+    } finally {
+    }
+  }
+
+  stage('build') {
+    try {
+      docker.withRegistry('https://registry.gtm.team') {
+        app.push("${env.BUILD_NUMBER}")
+        app.push("latest")
+      }
+    } catch (error) {
+
+    } finally {       
+    }
+  }
+}

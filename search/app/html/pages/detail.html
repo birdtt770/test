@@ -1,0 +1,346 @@
+<div class="font_text" ng-controller="DetailController" ng-show="show">
+    <div class="container" style="border-radius: 20px; border-style: solid; border-color: white; background-color: #ffffff; box-shadow:
+        1px 1px 5px #a3a3a3;">
+        <div class="row" style="position: relative;">
+            <div class="col-md-6 col-lg-4">
+                <img class="center" ng-src="{{detailCardQuery.corporate.coCoIdentities[0].imageLogoPath | image_company}}" />
+            </div>
+
+            <div class="col-md-6" style="margin-top: 25px;">
+                <div class="font-color">
+                    <h3>
+                        {{detailCardQuery.jobPosition.name}}
+                    </h3>
+                </div>
+                <hr class="hr-detail">
+                <div>
+                    <h5>
+                        <span ng-if="detailCardQuery.noPosition != '0'">
+                            {{detailCardQuery.noPosition}} อัตรา
+                        </span>
+                    </h5>
+
+                    <h5>
+                        <span ng-if="detailCardQuery.noPosition == '0'">
+                            {{detailCardQuery.noPosition}} อัตรา
+                        </span>
+                    </h5>
+                </div>
+
+                <div>
+                    <h5>
+                        {{detailCardQuery.corporate.coCoIdentities[0].companyName}}
+                    </h5>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container detail-vacancy">
+        <div class="row masonry top-10" data-target=".item" data-col-xs="12" data-col-sm="6" data-col-md="6" data-col-lg="6" data-col-xl="6">
+
+            <div class="item">
+                <!-- salary -->
+                <h4 class="font-color">
+                    <i class="fas fa-dollar-sign"></i> {{'APPLICANT_PREVIEW_PROFILE_SALARY_BASE' | translate}}
+                </h4>
+                <ul>
+                    <li ng-repeat="details_vaEcSalaryBases in detailCardQuery.vaEcSalaryBases.filter( createFilterStatusEx('I'))">
+                        <span ng-if="details_vaEcSalaryBases.salaryTo && details_vaEcSalaryBases.salaryFrom">
+                            {{details_vaEcSalaryBases.salaryFrom}} - {{details_vaEcSalaryBases.salaryTo}} {{details_vaEcSalaryBases.currency.name}}
+                        </span>
+                        <span ng-if="!details_vaEcSalaryBases.salaryTo && details_vaEcSalaryBases.salaryFrom">
+                            มากกว่า {{details_vaEcSalaryBases.salaryFrom}} {{details_vaEcSalaryBases.currency.name}}
+                        </span>
+                        <span ng-if="details_vaEcSalaryBases.salaryTo && !details_vaEcSalaryBases.salaryFrom">
+                            น้อยกว่า {{details_vaEcSalaryBases.salaryTo}} {{details_vaEcSalaryBases.currency.name}}
+                        </span>
+                        <span ng-if="!details_vaEcSalaryBases.salaryTo && !details_vaEcSalaryBases.salaryFrom">
+                            {{'VACANCYDETAIL_NEGOTIABLE' | translate}}
+                        </span>
+                    </li>
+                    <li ng-if="!detailCardQuery.vaEcSalaryBases.length > 0">
+                        <span>{{'VACANCYDETAIL_NEGOTIABLE' | translate}}</span>
+                    </li>
+                </ul>
+                <!-- end salary -->
+            </div>
+
+
+            <div class="item">
+                <!-- JOB_DESCRIPTIONS -->
+                <h4 class="font-color">
+                    <i class="fas fa-book"></i> {{'VACANCY_WEIGHT_CRITERIA_JOB_DESCRIPTIONS' | translate}}
+                </h4>
+                <ul>
+                    <li ng-repeat="details_vaEpWyResponsiblePositions in detailCardQuery.vaEpWyResponsiblePositions.filter( createFilterStatusEx('I')).filter(responsiblePositionsFilterNull())">
+                        <span ng-if="details_vaEpWyResponsiblePositions.jobExperience.name">
+                            {{details_vaEpWyResponsiblePositions.jobExperience.name}}
+                        </span>
+                    </li>
+                    <li ng-if="!detailCardQuery.vaEpWyResponsiblePositions.filter( createFilterStatusEx('I')).filter(responsiblePositionsFilterNull()).length > 0">
+                        <span>
+                            ไม่ระบุ
+                        </span>
+                    </li>
+                </ul>
+                <!-- end JOB_DESCRIPTIONS -->
+            </div>
+
+
+
+            <div class="item">
+                <!-- Benefits job -->
+                <h4 class="font-color">
+                    <i class="fas fa-check-circle"></i> {{'VACANCYDETAIL_FRINGE_BENEFIT' | translate}}
+                </h4>
+                <ul>
+                    <li ng-repeat="details_vaEcFringeBenefits in detailCardQuery.vaEcFringeBenefits.filter( createFilterStatusEx('I')).filter(vaEcFringeBenefitsFilterNull())">
+                        <span ng-if="details_vaEcFringeBenefits.fringeBenefit.name">
+                            {{details_vaEcFringeBenefits.fringeBenefit.name}}
+                        </span>
+                    </li>
+                    <li ng-if="!detailCardQuery.vaEcFringeBenefits.filter( createFilterStatusEx('I')).filter(vaEcFringeBenefitsFilterNull()).length > 0">
+                        <span>
+                            ไม่ระบุ
+                        </span>
+                    </li>
+                </ul>
+                <!-- end Benefits job -->
+            </div>
+
+
+
+
+            <div class="item">
+                <!-- EMPLOYMENT_TYPE -->
+                <h4 class="font-color">
+                    <i class="fas fa-envelope-open"></i> {{'VACANCYDETAIL_EMPLOYMENT_TYPE' | translate}}
+                </h4>
+                <ul>
+                    <li ng-repeat="details_vaEcEmploymentTasks in detailCardQuery.vaEcEmploymentTasks.filter( createFilterStatusEx('I')).filter(vaEcEmploymentTasksFilterNull())">
+                        <span ng-if="details_vaEcEmploymentTasks.employmentTask.employmentType.name">{{details_vaEcEmploymentTasks.employmentTask.employmentType.name}}</span>
+                    </li>
+                    <li ng-if="!detailCardQuery.vaEcEmploymentTasks.filter( createFilterStatusEx('I')).filter(vaEcEmploymentTasksFilterNull()).length > 0">
+                        <span>ไม่ระบุ</span>
+                    </li>
+                </ul>
+                <!-- end EMPLOYMENT_TYPE -->
+            </div>
+
+
+
+
+            <div class="item">
+                <!-- Date  -->
+                <h4 class="font-color">
+                    <i class="fas fa-calendar-alt"></i> {{'VACANCYDETAIL_ANNOUNCE_DATE' | translate}}
+                </h4>
+                <ul>
+                    <li>
+                        <span ng-if="detailCardQuery.dateStart && detailCardQuery.dateExpire">
+                            {{detailCardQuery.dateStart | date:'dd/MMM/yyyy'}} - {{detailCardQuery.dateExpire | date:'dd/MMM/yyyy'}}
+                        </span>
+                        <span ng-if="!detailCardQuery.dateStart && !detailCardQuery.dateExpire">
+                            ไม่ระบุ
+                        </span>
+                    </li>
+                </ul>
+                <!-- end Date -->
+            </div>
+
+
+
+            <div class="item">
+                <!-- property -->
+                <h4 class="font-color">
+                    <i class="fas fa-user"></i> {{'VACANCY_PERSONAL_DATA_HEADER' | translate}}
+                </h4>
+                <ul>
+                    <!-- NewGraduates -->
+                    <li ng-if="detailCardQuery.vaEpWorkYearExperience.isNewGraduates == 'Y'">
+                        <span>{{'VACANCYDETAIL_NEW_GRADUATE' | translate}}</span>
+                    </li>
+                    <!-- end NewGraduates -->
+
+                    <!-- YearExperience -->
+                    <li ng-if="detailCardQuery.vaEpWorkYearExperience.noYearExperienceFrom && detailCardQuery.vaEpWorkYearExperience.noYearExperienceTo">
+                        <span>
+                            {{'VACANCYDETAIL_JOB_EXPERIENCE' | translate}} {{detailCardQuery.vaEpWorkYearExperience.noYearExperienceFrom}} - {{detailCardQuery.vaEpWorkYearExperience.noYearExperienceTo}}
+                            {{'VACANCYDETAIL_YEARS' | translate}}
+                        </span>
+                    </li>
+                    <li ng-if="detailCardQuery.vaEpWorkYearExperience.noYearExperienceFrom == 0 && detailCardQuery.vaEpWorkYearExperience.noYearExperienceTo">
+                        <span>
+                            {{'VACANCYDETAIL_JOB_EXPERIENCE' | translate}} {{detailCardQuery.vaEpWorkYearExperience.noYearExperienceFrom}} - {{detailCardQuery.vaEpWorkYearExperience.noYearExperienceTo}}
+                            {{'VACANCYDETAIL_YEARS' | translate}}
+                        </span>
+                    </li>
+                    <li ng-if="detailCardQuery.vaEpWorkYearExperience.noYearExperienceFrom && !detailCardQuery.vaEpWorkYearExperience.noYearExperienceTo">
+                        <span>
+                            {{'VACANCYDETAIL_JOB_EXPERIENCE' | translate}} มากกว่า {{detailCardQuery.vaEpWorkYearExperience.noYearExperienceFrom}} {{'VACANCYDETAIL_YEARS'
+                            | translate}}
+                        </span>
+                    </li>
+                    <li ng-if="!detailCardQuery.vaEpWorkYearExperience.noYearExperienceFrom && !detailCardQuery.vaEpWorkYearExperience.noYearExperienceTo">
+                        <span>
+                            {{'VACANCYDETAIL_JOB_EXPERIENCE' | translate}} ไม่ระบุ
+                        </span>
+                    </li>
+                    <!-- end YearExperience -->
+
+                    <!-- age -->
+                    <li ng-if="detailCardQuery.vaPersonalData.ageFrom && detailCardQuery.vaPersonalData.ageTo">
+                        <span>{{'VACANCYDETAIL_AGE' | translate}} {{detailCardQuery.vaPersonalData.ageFrom}} - {{detailCardQuery.vaPersonalData.ageTo}}
+                            {{'VACANCYDETAIL_YEARS' | translate}}</span>
+                    </li>
+                    <li ng-if="!detailCardQuery.vaPersonalData.ageFrom && detailCardQuery.vaPersonalData.ageTo">
+                        <span>{{'VACANCYDETAIL_AGE' | translate}} น้อยกว่า {{detailCardQuery.vaPersonalData.ageTo}} {{'VACANCYDETAIL_YEARS'
+                            | translate}}</span>
+                    </li>
+                    <li ng-if="detailCardQuery.vaPersonalData.ageFrom && !detailCardQuery.vaPersonalData.ageTo">
+                        <span> {{'VACANCYDETAIL_AGE' | translate}} มากกว่า {{detailCardQuery.vaPersonalData.ageFrom}} {{'VACANCYDETAIL_YEARS'
+                            | translate}}</span>
+                    </li>
+                    <li ng-if="!detailCardQuery.vaPersonalData.ageFrom && !detailCardQuery.vaPersonalData.ageTo">
+                        <span>{{'VACANCYDETAIL_AGE' | translate}} ไม่ระบุ</span>
+                    </li>
+                    <!-- end age -->
+
+                    <!-- Educations -->
+                    <li ng-repeat="details_vaPqEducations in detailCardQuery.vaPqEducations">
+                        เกณฑ์การศึกษา {{$index +1}}
+                        <ul>
+                            <li ng-if="details_vaPqEducations.faculty.name">
+                                <span>{{'VACANCYDETAIL_FACULTY' | translate}} {{details_vaPqEducations.faculty.name}}</span>
+                            </li>
+                            <li ng-if="details_vaPqEducations.fieldStudy.name">
+                                <span>{{'VACANCYDETAIL_MAJOR' | translate}} {{details_vaPqEducations.fieldStudy.name}}</span>
+                            </li>
+                            <li ng-if="details_vaPqEducations.educationLevel.name">
+                                <span>{{'VACANCYDETAIL_EDUCATION' | translate}} {{details_vaPqEducations.educationLevel.name}}</span>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- end Educations -->
+                </ul>
+                <!-- end property -->
+            </div>
+
+
+
+            <div class="item">
+                <!-- Contact -->
+                <h4 class="font-color">
+                    <i class="fas fa-map-marker-alt"></i> {{'VACANCYDETAIL_CONTACT' | translate}}
+                </h4>
+                <ul>
+                    <!-- ContactPersons -->
+                    <li ng-repeat="details_vaRcContactPersons in detailCardQuery.vaRcContactPersons.filter( createFilterStatusEx('I')) | limitTo : 1">
+                        <span ng-if="details_vaRcContactPersons.coCoContactPerson.user.firstName">
+                            {{details_vaRcContactPersons.coCoContactPerson.user.firstName}}
+                        </span>
+                    </li>
+
+                    <span ng-repeat="details_vaRcContactPersons in detailCardQuery.vaRcContactPersons.filter( createFilterStatusEx('I')) | limitTo : 1">
+                        <span ng-repeat="details_userMapPhones in details_vaRcContactPersons.coCoContactPerson.userMapPhones">
+                            <li ng-if="details_userMapPhones.phone.phoneNo">
+                                {{'VACANCYDETAIL_CONTACT_PHONE' | translate}} {{details_userMapPhones.phone.phoneNo}}
+                            </li>
+                        </span>
+                    </span>
+                    <!-- end ContactPersons -->
+
+                    <!-- WorkPlaces -->
+                    <span ng-repeat="details_vaEcWorkPlaces in detailCardQuery.vaEcWorkPlaces.filter( createFilterStatusEx('I'))">
+                        <span ng-if="!(details_vaEcWorkPlaces.address.city.name == undefined && details_vaEcWorkPlaces.address.county.name == undefined && details_vaEcWorkPlaces.address.province.name == undefined
+                                && details_vaEcWorkPlaces.address.housingNo == undefined && details_vaEcWorkPlaces.address.streetAddress2 == undefined  
+                                && details_vaEcWorkPlaces.address.zipcode == undefined)">
+                            <li>
+                                <span ng-if="details_vaEcWorkPlaces.address.city.name">{{details_vaEcWorkPlaces.address.city.name}}</span>
+                                <span ng-if="details_vaEcWorkPlaces.address.country.name">{{details_vaEcWorkPlaces.address.country.name}}</span>
+                                <span ng-if="details_vaEcWorkPlaces.address.province.name">{{details_vaEcWorkPlaces.address.province.name}}</span>
+                                <span ng-if="details_vaEcWorkPlaces.address.housingNo">{{details_vaEcWorkPlaces.address.housingNo}}</span>
+                                <span ng-if="details_vaEcWorkPlaces.address.streetAddress2">{{details_vaEcWorkPlaces.address.streetAddress2}}</span>
+                                <span ng-if="details_vaEcWorkPlaces.address.zipcode">{{details_vaEcWorkPlaces.address.zipcode}}</span>
+                            </li>
+                        </span>
+                    </span>
+                    <!-- end WorkPlaces -->
+
+                    <!-- companyWebsite -->
+                    <li ng-if="detailCardQuery.corporate.coCoIdentities[0].companyWebsite">
+                        {{detailCardQuery.corporate.coCoIdentities[0].companyWebsite}}
+                    </li>
+                    <!-- end companyWebsite -->
+                </ul>
+                <!-- end Contact -->
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Company Address -->
+    <div class="container detail-vacancy">
+        <h3 class="font-color-CoAddress top-10">Company Address</h3>
+        <h5 class="font-color  top-10">
+            <i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i>{{'VACANCYDETAIL_COMPANY_ADDRESS' | translate}}
+        </h5>
+        <span ng-repeat="details_coCoContactAddresses in detailCardQueryComnapy.coCoContactAddresses.filter(coCoContactAddressesFilterNull())">
+            <span ng-if="details_coCoContactAddresses.choiceAddressType">
+                <ul>
+                    <li ng-if="!(details_coCoContactAddresses.address.city.name == undefined && details_coCoContactAddresses.address.county.name == undefined && details_coCoContactAddresses.address.province.name == undefined
+                        && details_coCoContactAddresses.address.housingNo == undefined && details_coCoContactAddresses.address.streetAddress1 == undefined && details_coCoContactAddresses.address.streetAddress2 == undefined  
+                        && details_coCoContactAddresses.address.zipcode == undefined)">
+                        <span ng-if="details_coCoContactAddresses.address.city.name">{{details_coCoContactAddresses.address.city.name}}</span>
+                        <span ng-if="details_coCoContactAddresses.address.country.name">{{details_coCoContactAddresses.address.country.name}}</span>
+                        <span ng-if="details_coCoContactAddresses.address.province.name">{{details_coCoContactAddresses.address.province.name}}</span>
+                        <span ng-if="details_coCoContactAddresses.address.housingNo">{{details_coCoContactAddresses.address.housingNo}}</span>
+                        <span ng-if="details_coCoContactAddresses.address.streetAddress1">{{details_coCoContactAddresses.address.streetAddress1}}</span>
+                        <span ng-if="details_coCoContactAddresses.address.streetAddress2">{{details_coCoContactAddresses.address.streetAddress2}}</span>
+                        <span ng-if="details_coCoContactAddresses.address.zipcode">{{details_coCoContactAddresses.address.zipcode}}</span>
+                    </li>
+                </ul>
+            </span>
+        </span>
+        <ul>
+            <li ng-if="!detailCardQueryComnapy.coCoContactAddresses.filter(coCoContactAddressesFilterNull()).length > 0 ">
+                ไม่ระบุ
+            </li>
+        </ul>
+
+        <h5 class="font-color top-10">
+            <i class="fas fa-user-alt" style="margin-right: 10px;"></i>{{'COMPANY_CONTACT_PERSON_PERSON' | translate}}
+        </h5>
+        <ul>
+            <li ng-if="detailCardQueryComnapy.coCoContactAddresses[0].address.addressMapPhones[0].phone.phoneNo">
+
+                {{detailCardQueryComnapy.coCoContactAddresses[0].address.addressMapPhones[0].phone.phoneNo}}
+            </li>
+            <li ng-if="!detailCardQueryComnapy.coCoContactAddresses[0].address.addressMapPhones[0].phone.phoneNo">
+
+                ไม่ระบุ
+            </li>
+        </ul>
+
+        <h5 class="font-color top-10">
+            <i class="fas fa-globe-americas" style="margin-right: 10px;"></i>{{'COMPANY_IDENTITY_COMPANY_WEDSITE' | translate}}
+        </h5>
+        <ul>
+            <li ng-if="detailCardQueryComnapy.coCoIdentities[0].companyWebsite && detailCardQueryComnapy.coCoIdentities[0].companyWebsite != '-'">
+                {{detailCardQueryComnapy.coCoIdentities[0].companyWebsite}}
+            </li>
+            <li ng-if="!detailCardQueryComnapy.coCoIdentities[0].companyWebsite || detailCardQueryComnapy.coCoIdentities[0].companyWebsite == '-'">
+                ไม่ระบุ
+            </li>
+        </ul>
+    </div>
+    <!-- end Company Address -->
+</div>
+
+
+<script>
+
+    $('.masonry').masonry();
+</script>

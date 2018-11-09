@@ -1,0 +1,102 @@
+var gulp = require('gulp'),
+    bower = require('gulp-bower'),
+    rimraf = require('rimraf'),
+    serve = require('gulp-serve'),
+    concat = require('gulp-concat'),
+    less = require('gulp-less'),
+    sass        = require('gulp-sass'),
+    minifyCss = require('gulp-minify-css'),
+    uglify = require('gulp-uglify'),
+    replace = require('gulp-replace'),
+    uuidv4 = require('uuid/v4'),
+    browserSync = require('browser-sync').create();
+
+var paths = {
+    index: ['./app/pages/index.html'],
+    less: ['./app/less/**/*.less'],
+    js: ['./app/js/**/*.js'],
+    bootstrap: {
+      scss: ['node_modules/bootstrap/scss/bootstrap.scss', 'src/scss/**/*.scss'],
+      js: ['node_modules/bootstrap/dist/js/bootstrap.js', 'src/js/**/*.js'],
+    },
+    dist: {
+      www: './www/',
+      css: './www/css/',
+      js: './www/js/',
+      lib: './www/lib',
+    },
+  }
+var uuid = uuidv4().replace(/-/g, '');
+var uuidFile = {
+  js: uuid+'.js',
+  css: uuid+'.css',
+}
+
+gulp.task('install', ['clean','less','js','replace-uuid'], function(cb) {
+  return bower()
+    .pipe(gulp.dest(paths.dist.lib));
+});
+
+gulp.task('clean', function(cb) {
+  rimraf('./bower_components', function() {
+    rimraf(paths.dist.lib, cb);
+  });
+});
+
+gulp.task('bootstrap', function() {
+  gulp.src(paths.bootstrap.scss)
+    .pipe(sass())
+    .pipe(gulp.dest(paths.dist.css))
+    .pipe(browserSync.stream());
+  gulp.src(paths.bootstrap.js)
+    .pipe(uglify())
+    .pipe(gulp.dest(paths.dist.js))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('less', function(cb) {  
+  rimraf(paths.dist.css, cb);
+  gulp.src(paths.less)
+    .pipe(less())
+    .pipe(minifyCss())
+    .pipe(concat(uuidFile.css))
+    .pipe(gulp.dest(paths.dist.css))
+    .pipe(browserSync.stream());
+}); 
+
+gulp.task('js', function(cb) {
+  rimraf(paths.dist.js, cb);
+  gulp.src(paths.js)
+    .pipe(uglify())
+    .pipe(concat(uuidFile.js))
+    .pipe(gulp.dest(paths.dist.js))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('replace-uuid', function() {
+  gulp.src(paths.index)
+    .pipe(replace('script.js', uuidFile.js))
+    .pipe(replace('style.css', uuidFile.css))
+    .pipe(gulp.dest(paths.dist.www));
+});
+
+gulp.task('watch', ['install'], function() {
+  gulp.watch('www/**', ['replace-uuid'], function() {
+    browserSync.reload();
+  });
+  gulp.watch(paths.less,['less']);
+  gulp.watch(paths.js,['js']);
+});
+
+gulp.task('serve', ['watch'], function() {
+  browserSync.init({
+    server: {
+      baseDir: __dirname + '/www/',
+      directory: false
+    },
+    ghostMode: false,
+    notify: false,
+    debounce: 200,
+    index: 'index.html'
+  });
+});
